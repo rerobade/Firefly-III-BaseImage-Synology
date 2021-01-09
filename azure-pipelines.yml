@@ -13,12 +13,12 @@ steps:
 - checkout: self
   persistCredentials: true
 
-- displayName: 'Run a one-line script'
-  script: echo Hello, world!
-  
+- script: |
+    git config --global user.email "james@firefly-iii.org"
+    git config --global user.name "James Cole"
+  displayName: 'Do Git config'
 
-- displayName: 'Run a multi-line script'
-  script: |
+- script: |
     echo Add other tasks to build, test, and deploy your project.
     echo See https://aka.ms/yaml
-  
+  displayName: 'Run a multi-line script'
