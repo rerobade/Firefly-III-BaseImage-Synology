@@ -36,7 +36,25 @@ steps:
     git push
   displayName: 'Commit changed to Git.'
 
+- script: |
+    set -euo pipefail
+    sudo rm -rf /var/lib/apt/lists/*
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
+    sudo apt-get update
+    sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 
+    echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+    mkdir -p $HOME/.docker
+    touch $HOME/.docker/config.json
+    echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
+    sudo service docker restart
+
+    echo "Docker username = '$DOCKER_USERNAME'."
+    
+    docker version -f '{{.Server.Experimental}}'
+    docker version
+  displayName: 'Verify Docker installation.'
 
 - checkout: self
   clean: true
