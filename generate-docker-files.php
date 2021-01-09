@@ -29,7 +29,15 @@ $files = [
     sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/apache/docker-php-ext-enable', PHP_TO_USE),
     sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/apache/docker-php-ext-install', PHP_TO_USE),
     sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/apache/docker-php-source', PHP_TO_USE),
-    ]
+    ],
+    'fpm' => [
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/fpm/Dockerfile', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/fpm/docker-php-entrypoint', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/fpm/docker-php-ext-configure', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/fpm/docker-php-ext-enable', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/fpm/docker-php-ext-install', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/fpm/docker-php-source', PHP_TO_USE),
+    ],
 ];
 
 if(! array_key_exists(IMG_BUILD, $files)) {
@@ -75,7 +83,7 @@ if('apache' === IMG_BUILD) {
 }
 
 
-if('apache' === IMG_BUILD) {
+if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) {
     debugMessage('Step: install some extra packages and remove the start command');
 
     $filename = sprintf('%s/Dockerfile', BUILD_DIR);
@@ -101,7 +109,7 @@ if('apache' === IMG_BUILD) {
     unset($content);
 }
 
-if('apache' === IMG_BUILD) {
+if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) {
     debugMessage('Step: inject extra code at the start of the Docker file');
 
     $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
@@ -113,7 +121,7 @@ if('apache' === IMG_BUILD) {
     unset($content);
 }
 
-if('apache' === IMG_BUILD) {
+if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) {
     debugMessage('Step: append custom commands');
 
     $filename     = sprintf('%s/Dockerfile', BUILD_DIR);
@@ -151,6 +159,25 @@ if('apache' === IMG_BUILD) {
     }
     copy(sprintf('%s/apache/%s', __DIR__, 'apache2-ports.conf'), sprintf('%s/%s', $dirName, 'apache2-ports.conf'));
     copy(sprintf('%s/apache/%s', __DIR__, 'apache2-site.conf'), sprintf('%s/%s', $dirName, 'apache2-site.conf'));
+}
+
+if('fpm' === IMG_BUILD) {
+    debugMessage('Step: copy scripts');
+    $dirName = sprintf('%s/%s-%s/scripts', __DIR__, IMG_BUILD, PHP_TO_USE);
+    if(!file_exists($dirName)) {
+        mkdir($dirName, 0777, true);
+    }
+    copy(sprintf('%s/scripts/%s', __DIR__, 'finalize-image.sh'), sprintf('%s/%s', $dirName, 'finalize-image.sh'));
+    copy(sprintf('%s/scripts/%s', __DIR__, 'wait-for-it.sh'), sprintf('%s/%s', $dirName, 'wait-for-it.sh'));
+
+    debugMessage('Step: copy conf');
+
+    $dirName = sprintf('%s/%s-%s/conf', __DIR__, IMG_BUILD, PHP_TO_USE);
+    if(!file_exists($dirName)) {
+        mkdir($dirName, 0777, true);
+    }
+    copy(sprintf('%s/conf/%s', __DIR__, 'cacert.pem'), sprintf('%s/%s', $dirName, 'cacert.pem'));
+    copy(sprintf('%s/conf/%s', __DIR__, 'locale.gen'), sprintf('%s/%s', $dirName, 'locale.gen'));
 }
 
 
