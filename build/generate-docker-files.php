@@ -13,7 +13,7 @@ declare(strict_types=1);
 // [--platform=<platform>]
 
 define('ROOT', $argv[1] ?? '.');
-define('PHP_TO_USE', '7.4');
+define('PHP_TO_USE', $argv[2] ?? '7.4');
 
 $files = [
     sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/apache/Dockerfile', PHP_TO_USE),
