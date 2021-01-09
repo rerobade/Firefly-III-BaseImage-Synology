@@ -24,10 +24,12 @@ steps:
   displayName: 'Run script to generate docker files.'
 
 - script: |
+    cd BaseImage
     git status
     git add Dockerfile
     git commit -m "Auto-update Dockerfile."
     git push
+  displayName: 'Commit changed to Git.'
 
 - checkout: self
   clean: true
