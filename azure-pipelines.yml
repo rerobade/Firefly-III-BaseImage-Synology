@@ -71,7 +71,7 @@ steps:
     cd BaseImage
     echo "Docker username = '$(DOCKERUSERNAME)'."
     echo $(DOCKERPASSWORD) | docker login --username $(DOCKERUSERNAME) --password-stdin
-    docker buildx build --platform ${{ variables.platforms }} -t ${{ variables.repository }} . -f Dockerfile
+    docker buildx build --platform ${{ variables.platforms }} -t ${{ variables.repository }} --push . -f Dockerfile
   displayName: 'Build!'
 
 - checkout: self
