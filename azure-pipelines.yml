@@ -5,6 +5,7 @@
 
 trigger: none
 pr: none
+timeoutInMinutes: 240
 
 parameters:
 - name: buildPhpVersion
