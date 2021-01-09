@@ -6,14 +6,6 @@
 trigger: none
 pr: none
 
-schedules:
-- cron: "0 0 1 * *"
-  displayName: Monthly build
-  branches:
-    include:
-    - main
-  always: true
-
 variables:
 - name: buildPhpVersion
   value: 7.4
@@ -38,7 +30,7 @@ steps:
 
 - script: |
     cd BaseImage
-    php build/generate-docker-files.php ${{ variables.buildImageType }} ${{ variables.buildPhpVersion }}
+    php generate-docker-files.php ${{ variables.buildImageType }} ${{ variables.buildPhpVersion }}
   displayName: 'Run script to generate docker files.'
 
 - script: |
