@@ -38,7 +38,6 @@ steps:
     git checkout main
     git status
     git add ${{ variables.buildImageType }}-${{ variables.buildPhpVersion }}/
-    git add fpm-image
     git commit -m "Auto-update build files."
     git push
   displayName: 'Commit changed to Git.'
