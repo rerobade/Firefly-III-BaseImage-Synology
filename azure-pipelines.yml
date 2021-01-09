@@ -6,15 +6,23 @@
 trigger: none
 pr: none
 
-variables:
+parameters:
 - name: buildPhpVersion
-  value: 7.4
+  displayName: Build PHP version
+  type: string
+  default: 7.4
 - name: buildImageType
-  value: apache
+  displayName: Build image type
+  type: string
+  default: apache
 - name: platforms
-  value: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/386
+  displayName: Build platforms
+  type: string
+  default: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/386
 - name: repository
-  value: jc5x/test-repository
+  displayName: Repository name
+  type: string
+  default: jc5x/test-repository
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -30,14 +38,14 @@ steps:
 
 - script: |
     cd BaseImage
-    php generate-docker-files.php ${{ variables.buildImageType }} ${{ variables.buildPhpVersion }}
+    php generate-docker-files.php ${{ parameters.buildImageType }} ${{ parameters.buildPhpVersion }}
   displayName: 'Run script to generate docker files.'
 
 - script: |
     cd BaseImage
     git checkout main
     git status
-    git add ${{ variables.buildImageType }}-${{ variables.buildPhpVersion }}/
+    git add ${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }}/
     git commit -m "Auto-update build files."
     git push
   displayName: 'Commit changed to Git.'
@@ -73,8 +81,8 @@ steps:
     cd BaseImage
     echo "Docker username = '$(DOCKERUSERNAME)'."
     echo $(DOCKERPASSWORD) | docker login --username $(DOCKERUSERNAME) --password-stdin
-    cd ${{ variables.buildImageType }}-${{ variables.buildPhpVersion }}/
-    docker buildx build --platform ${{ variables.platforms }} -t ${{ variables.repository }}:${{ variables.buildImageType }}-${{ variables.buildPhpVersion }} --push . -f Dockerfile
+    cd ${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }}/
+    docker buildx build --platform ${{ parameters.platforms }} -t ${{ parameters.repository }}:${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }} --push . -f Dockerfile
   displayName: 'Build!'
 
 - checkout: self
