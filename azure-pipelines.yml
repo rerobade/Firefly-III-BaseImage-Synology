@@ -23,5 +23,11 @@ steps:
     php build/generate-docker-files.php
   displayName: 'Run script to generate docker files.'
 
+- script: |
+    git status
+    git add Dockerfile
+    git commit -m "Auto-update Dockerfile."
+    git push
+
 - checkout: self
   clean: true
