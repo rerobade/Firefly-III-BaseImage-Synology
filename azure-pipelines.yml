@@ -40,6 +40,8 @@ jobs:
   - script: |
       cd BaseImage
       php generate-docker-files.php ${{ parameters.buildImageType }} ${{ parameters.buildPhpVersion }}
+      echo ${{ parameters.buildImageType }} ${{ parameters.buildPhpVersion }}
+      echo ${{ parameters.platforms }}
     displayName: 'Run script to generate docker files.'
 
   - script: |
