@@ -17,8 +17,10 @@ declare(strict_types=1);
 // 2) php 7.4 or php 8.0
 
 define('IMG_BUILD', $argv[1] ?? 'apache-image');
-define('BUILD_DIR', sprintf('%s/%s', __DIR__, IMG_BUILD));
 define('PHP_TO_USE', $argv[2] ?? '7.4');
+define('BUILD_DIR', sprintf('%s/%s-%s', __DIR__, IMG_BUILD, PHP_TO_USE));
+
+
 
 $files = [
     'apache-image' => [
@@ -106,7 +108,7 @@ if('apache-image' === IMG_BUILD) {
 
     $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
     $content     = file_get_contents($filename);
-    $injectStart = file_get_contents(sprintf('%s/%s-config/inject-start.txt', __DIR__, IMG_BUILD));
+    $injectStart = file_get_contents(sprintf('%s/%s-%s-config/inject-start.txt', __DIR__, IMG_BUILD, PHP_TO_USE));
     $content     = str_replace("FROM debian:buster-slim\n", sprintf("FROM debian:buster-slim\n%s", $injectStart), $content);
     file_put_contents($filename, $content);
     debugMessage('Added build arguments.');
@@ -119,7 +121,7 @@ if('apache-image' === IMG_BUILD) {
 
     $filename     = sprintf('%s/Dockerfile', BUILD_DIR);
     $content      = file_get_contents($filename);
-    $extraContent = file_get_contents(sprintf('%s/%s-config/inject-custom.txt', __DIR__, IMG_BUILD));
+    $extraContent = file_get_contents(sprintf('%s/%s-%s-config/inject-custom.txt', __DIR__, IMG_BUILD, PHP_TO_USE));
     $content      = $content . "\n" . $extraContent;
     file_put_contents($filename, $content);
     debugMessage('Added base code.');
