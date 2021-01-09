@@ -4,9 +4,7 @@
 # PLEASE DO NOT EDIT IT DIRECTLY.
 #
 
-ARG BASE
-FROM ${BASE} AS runtime
-ARG ARCH
+FROM debian:buster-slim
 # added from inject-start.txt
 
 ENV FIREFLY_III_PATH=/var/www/html COMPOSER_ALLOW_SUPERUSER=1 DEBIAN_FRONTEND=noninteractive

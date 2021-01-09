@@ -44,13 +44,14 @@ file_put_contents($filename, $content);
 debugMessage('Replace port exposure.');
 unset($content);
 
+# 2021-01-09 step removed because its no longer needed. was used in old azure build
 # step: replace "FROM debian:buster-slim" with something else (3 lines):
-$filename = sprintf('%s/Dockerfile', ROOT);
-$content  = file_get_contents($filename);
-$content  = str_replace("FROM debian:buster-slim\n", "ARG BASE\nFROM \${BASE} AS runtime\nARG ARCH\n", $content);
-file_put_contents($filename, $content);
-debugMessage('Replace base image.');
-unset($content);
+#$filename = sprintf('%s/Dockerfile', ROOT);
+#$content  = file_get_contents($filename);
+#$content  = str_replace("FROM debian:buster-slim\n", "ARG BASE\nFROM \${BASE} AS runtime\nARG ARCH\n", $content);
+#file_put_contents($filename, $content);
+#debugMessage('Replace base image.');
+#unset($content);
 
 # step: install some extra packages and remove the start command:
 $packages         = ['locales', 'unzip', 'xz-utils', 'nano', 'git'];
@@ -76,7 +77,7 @@ unset($content);
 # step: inject extra code at the start of the Docker file:
 $content     = file_get_contents($filename);
 $injectStart = file_get_contents(sprintf('%s/docker/inject-start.txt', ROOT));
-$content     = str_replace("ARG ARCH\n", sprintf("ARG ARCH\n%s", $injectStart), $content);
+$content     = str_replace("FROM debian:buster-slim\n", sprintf("FROM debian:buster-slim\n%s", $injectStart), $content);
 file_put_contents($filename, $content);
 debugMessage('Add build arguments.');
 unset($content);
