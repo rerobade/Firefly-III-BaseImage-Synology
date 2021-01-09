@@ -51,10 +51,13 @@ steps:
     sudo service docker restart
 
     echo "Docker username = '$DOCKER_USERNAME'."
-    
+
     docker version -f '{{.Server.Experimental}}'
     docker version
   displayName: 'Verify Docker installation.'
+  env:
+    DOCKER_USERNAME: $(dockerUsername)
+    DOCKER_PASSWORD: $(dockerPassword)
 
 - checkout: self
   clean: true
