@@ -16,7 +16,9 @@ schedules:
 
 variables:
 - name: buildPhpVersion
-  value: 7.4 
+  value: 7.4
+- name: buildImageType
+  value: apache-image
 - name: platforms
   value: linux/amd64
 - name: repository
@@ -36,14 +38,14 @@ steps:
 
 - script: |
     cd BaseImage
-    php build/generate-docker-files.php . ${{ variables.buildPhpVersion }}
+    php build/generate-docker-files.php ${{ variables.buildImageType }} ${{ variables.buildPhpVersion }}
   displayName: 'Run script to generate docker files.'
 
 - script: |
     cd BaseImage
     git checkout main
     git status
-    git add Dockerfile Dockerfile.original apache2-foreground docker-php-entrypoint docker-php-ext-configure docker-php-ext-enable docker-php-ext-install docker-php-source
+    git add apache-image/* fpm-image/*
     git commit -m "Auto-update build files."
     git push
   displayName: 'Commit changed to Git.'
@@ -79,6 +81,7 @@ steps:
     cd BaseImage
     echo "Docker username = '$(DOCKERUSERNAME)'."
     echo $(DOCKERPASSWORD) | docker login --username $(DOCKERUSERNAME) --password-stdin
+    cd ${{ variables.buildImageType }}
     docker buildx build --platform ${{ variables.platforms }} -t ${{ variables.repository }} --push . -f Dockerfile
   displayName: 'Build!'
 
