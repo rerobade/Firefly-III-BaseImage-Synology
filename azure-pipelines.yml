@@ -25,9 +25,10 @@ steps:
 
 - script: |
     cd BaseImage
+    git checkout main
     git status
-    git add Dockerfile
-    git commit -m "Auto-update Dockerfile."
+    git add Dockerfile Dockerfile.original apache2-foreground docker-php-entrypoint docker-php-ext-configure docker-php-ext-enable docker-php-ext-install docker-php-source
+    git commit -m "Auto-update build files."
     git push
   displayName: 'Commit changed to Git.'
 
