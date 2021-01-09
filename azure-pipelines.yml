@@ -69,6 +69,8 @@ steps:
 
 - script: |
     cd BaseImage
+    echo "Docker username = '$(DOCKERUSERNAME)'."
+    echo $(DOCKERPASSWORD) | docker login --username $(DOCKERUSERNAME) --password-stdin
     docker buildx build --platform ${{ variables.platforms }} -t ${{ variables.repository }} . -f Dockerfile
   displayName: 'Build!'
 
