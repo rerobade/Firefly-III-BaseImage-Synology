@@ -125,6 +125,36 @@ if('apache-image' === IMG_BUILD) {
     unset($content);
 }
 
+if('apache-image' === IMG_BUILD) {
+    debugMessage('Step: copy scripts');
+    $dirName = sprintf('%s/%s-%s/scripts', __DIR__, IMG_BUILD, PHP_TO_USE);
+    if(!file_exists($dirName)) {
+        mkdir($dirName, 0777, true);
+    }
+    copy(sprintf('%s/scripts/%s', __DIR__, 'finalize-image.sh'), sprintf('%s/%s', $dirName, 'finalize-image.sh'));
+    copy(sprintf('%s/scripts/%s', __DIR__, 'wait-for-it.sh'), sprintf('%s/%s', $dirName, 'wait-for-it.sh'));
+
+    debugMessage('Step: copy conf');
+
+    $dirName = sprintf('%s/%s-%s/conf', __DIR__, IMG_BUILD, PHP_TO_USE);
+    if(!file_exists($dirName)) {
+        mkdir($dirName, 0777, true);
+    }
+    copy(sprintf('%s/conf/%s', __DIR__, 'cacert.pem'), sprintf('%s/%s', $dirName, 'cacert.pem'));
+    copy(sprintf('%s/conf/%s', __DIR__, 'locale.gen'), sprintf('%s/%s', $dirName, 'locale.gen'));
+
+    debugMessage('Step: copy apache');
+
+    $dirName = sprintf('%s/%s-%s/apache', __DIR__, IMG_BUILD, PHP_TO_USE);
+    if(!file_exists($dirName)) {
+        mkdir($dirName, 0777, true);
+    }
+    copy(sprintf('%s/apache/%s', __DIR__, 'apache2-ports.conf'), sprintf('%s/%s', $dirName, 'apache2-ports.conf'));
+    copy(sprintf('%s/apache/%s', __DIR__, 'apache2-site.conf'), sprintf('%s/%s', $dirName, 'apache2-site.conf'));
+}
+
+
+
 debugMessage(sprintf('Done building %s/%s', IMG_BUILD, PHP_TO_USE));
 
 
