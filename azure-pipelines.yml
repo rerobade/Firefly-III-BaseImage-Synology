@@ -3,8 +3,8 @@
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
 
-trigger:
-- main
+#trigger:
+#- main
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -31,6 +31,9 @@ steps:
     git commit -m "Auto-update build files."
     git push
   displayName: 'Commit changed to Git.'
+
+
+
 
 - checkout: self
   clean: true
