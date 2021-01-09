@@ -20,8 +20,6 @@ define('IMG_BUILD', $argv[1] ?? 'apache-image');
 define('PHP_TO_USE', $argv[2] ?? '7.4');
 define('BUILD_DIR', sprintf('%s/%s-%s', __DIR__, IMG_BUILD, PHP_TO_USE));
 
-
-
 $files = [
     'apache-image' => [
     sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/apache/Dockerfile', PHP_TO_USE),
@@ -114,7 +112,6 @@ if('apache-image' === IMG_BUILD) {
     debugMessage('Added build arguments.');
     unset($content);
 }
-
 
 if('apache-image' === IMG_BUILD) {
     debugMessage('Step: append custom commands');
