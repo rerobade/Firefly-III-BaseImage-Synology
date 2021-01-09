@@ -37,7 +37,8 @@ steps:
     cd BaseImage
     git checkout main
     git status
-    git add apache-image/* fpm-image/*
+    git add apache-image
+    git add fpm-image
     git commit -m "Auto-update build files."
     git push
   displayName: 'Commit changed to Git.'
