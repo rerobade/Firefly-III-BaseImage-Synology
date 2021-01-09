@@ -6,6 +6,10 @@
 #trigger:
 #- main
 
+variables:
+- name: buildPhpVersion
+  value: 7.4 
+
 pool:
   vmImage: 'ubuntu-latest'
 
@@ -20,7 +24,7 @@ steps:
 
 - script: |
     cd BaseImage
-    php build/generate-docker-files.php
+    php build/generate-docker-files.php . ${{ variables.buildPhpVersion }}
   displayName: 'Run script to generate docker files.'
 
 - script: |
@@ -31,7 +35,6 @@ steps:
     git commit -m "Auto-update build files."
     git push
   displayName: 'Commit changed to Git.'
-
 
 
 
