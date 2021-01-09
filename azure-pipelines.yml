@@ -50,14 +50,11 @@ steps:
     echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
     sudo service docker restart
 
-    echo "Docker username = '$DOCKER_USERNAME'."
+    echo "Docker username = '$(DOCKERUSERNAME)'."
 
     docker version -f '{{.Server.Experimental}}'
     docker version
   displayName: 'Verify Docker installation.'
-  env:
-    DOCKER_USERNAME: $(dockerUsername)
-    DOCKER_PASSWORD: $(dockerPassword)
 
 - checkout: self
   clean: true
