@@ -10,7 +10,7 @@ variables:
 - name: buildPhpVersion
   value: 7.4
 - name: buildImageType
-  value: apache-image
+  value: apache
 - name: platforms
   value: linux/amd64
 - name: repository

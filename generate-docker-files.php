@@ -13,15 +13,15 @@ declare(strict_types=1);
  */
 
 // two options:
-// 1) apache base image (apache-image) or fpm base image (fpm-image)
+// 1) apache base image (apache) or fpm base image (fpm)
 // 2) php 7.4 or php 8.0
 
-define('IMG_BUILD', $argv[1] ?? 'apache-image');
+define('IMG_BUILD', $argv[1] ?? 'apache');
 define('PHP_TO_USE', $argv[2] ?? '7.4');
 define('BUILD_DIR', sprintf('%s/%s-%s', __DIR__, IMG_BUILD, PHP_TO_USE));
 
 $files = [
-    'apache-image' => [
+    'apache' => [
     sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/apache/Dockerfile', PHP_TO_USE),
     sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/apache/docker-php-entrypoint', PHP_TO_USE),
     sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/buster/apache/apache2-foreground', PHP_TO_USE),
@@ -63,7 +63,7 @@ copy(sprintf('%s/Dockerfile', BUILD_DIR), sprintf('%s/Dockerfile.original', BUIL
 // the steps below depend on what image is built. 
 
 
-if('apache-image' === IMG_BUILD) {
+if('apache' === IMG_BUILD) {
     debugMessage('Step: change "EXPOSE 80" from Dockerfile');
 
     $filename = sprintf('%s/Dockerfile', BUILD_DIR);
@@ -75,7 +75,7 @@ if('apache-image' === IMG_BUILD) {
 }
 
 
-if('apache-image' === IMG_BUILD) {
+if('apache' === IMG_BUILD) {
     debugMessage('Step: install some extra packages and remove the start command');
 
     $filename = sprintf('%s/Dockerfile', BUILD_DIR);
@@ -101,7 +101,7 @@ if('apache-image' === IMG_BUILD) {
     unset($content);
 }
 
-if('apache-image' === IMG_BUILD) {
+if('apache' === IMG_BUILD) {
     debugMessage('Step: inject extra code at the start of the Docker file');
 
     $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
@@ -113,7 +113,7 @@ if('apache-image' === IMG_BUILD) {
     unset($content);
 }
 
-if('apache-image' === IMG_BUILD) {
+if('apache' === IMG_BUILD) {
     debugMessage('Step: append custom commands');
 
     $filename     = sprintf('%s/Dockerfile', BUILD_DIR);
@@ -125,7 +125,7 @@ if('apache-image' === IMG_BUILD) {
     unset($content);
 }
 
-if('apache-image' === IMG_BUILD) {
+if('apache' === IMG_BUILD) {
     debugMessage('Step: copy scripts');
     $dirName = sprintf('%s/%s-%s/scripts', __DIR__, IMG_BUILD, PHP_TO_USE);
     if(!file_exists($dirName)) {
