@@ -9,6 +9,10 @@ trigger:
 variables:
 - name: buildPhpVersion
   value: 7.4 
+- name: platforms
+  value: linux/amd64
+- name: repository
+  value: jc5x/test-repository
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -62,6 +66,11 @@ steps:
     docker buildx inspect firefly_iii_builder --bootstrap
     docker buildx use firefly_iii_builder
   displayName: 'Set up builder'
+
+- script: |
+    cd BaseImage
+    docker buildx build --platform ${{ variables.platforms }} -t ${{ variables.repository }} . -f Dockerfile
+  displayName: 'Build!'
 
 - checkout: self
   clean: true
