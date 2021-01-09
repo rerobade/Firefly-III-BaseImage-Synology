@@ -5,7 +5,6 @@
 
 trigger: none
 pr: none
-timeoutInMinutes: 240
 
 parameters:
 - name: buildPhpVersion
@@ -25,66 +24,67 @@ parameters:
   type: string
   default: jc5x/test-repository
 
-pool:
-  vmImage: 'ubuntu-latest'
 
-steps:
-- checkout: self
-  persistCredentials: true
+jobs:
+- job: Jobbie
+  timeoutInMinutes: 240
+  pool:
+    vmImage: 'ubuntu-16.04'
+  steps:
+  - checkout: self
+    persistCredentials: true
+  - script: |
+      git config --global user.email "james@firefly-iii.org"
+      git config --global user.name "James Cole"
+    displayName: 'Do Git config'
+  - script: |
+      cd BaseImage
+      php generate-docker-files.php ${{ parameters.buildImageType }} ${{ parameters.buildPhpVersion }}
+    displayName: 'Run script to generate docker files.'
 
-- script: |
-    git config --global user.email "james@firefly-iii.org"
-    git config --global user.name "James Cole"
-  displayName: 'Do Git config'
+  - script: |
+      cd BaseImage
+      git checkout main
+      git status
+      git add ${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }}/
+      git commit -m "Auto-update build files."
+      git push
+    displayName: 'Commit changed to Git.'
 
-- script: |
-    cd BaseImage
-    php generate-docker-files.php ${{ parameters.buildImageType }} ${{ parameters.buildPhpVersion }}
-  displayName: 'Run script to generate docker files.'
+  - script: |
+      set -euo pipefail
+      sudo rm -rf /var/lib/apt/lists/*
+      curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+      sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
+      sudo apt-get update
+      sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
 
-- script: |
-    cd BaseImage
-    git checkout main
-    git status
-    git add ${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }}/
-    git commit -m "Auto-update build files."
-    git push
-  displayName: 'Commit changed to Git.'
+      echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+      mkdir -p $HOME/.docker
+      touch $HOME/.docker/config.json
+      echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
+      sudo service docker restart
 
-- script: |
-    set -euo pipefail
-    sudo rm -rf /var/lib/apt/lists/*
-    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-    sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) edge"
-    sudo apt-get update
-    sudo apt-get -y -o Dpkg::Options::="--force-confnew" install docker-ce
+      echo "Docker username = '$(DOCKERUSERNAME)'."
 
-    echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
-    mkdir -p $HOME/.docker
-    touch $HOME/.docker/config.json
-    echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
-    sudo service docker restart
+      docker version -f '{{.Server.Experimental}}'
+      docker version
+    displayName: 'Verify Docker installation.'
 
-    echo "Docker username = '$(DOCKERUSERNAME)'."
+  - script: |
+      docker run --rm --privileged multiarch/qemu-user-static --reset -p yes i
+      docker buildx create --name firefly_iii_builder
+      docker buildx inspect firefly_iii_builder --bootstrap
+      docker buildx use firefly_iii_builder
+    displayName: 'Set up builder'
 
-    docker version -f '{{.Server.Experimental}}'
-    docker version
-  displayName: 'Verify Docker installation.'
+  - script: |
+      cd BaseImage
+      echo "Docker username = '$(DOCKERUSERNAME)'."
+      echo $(DOCKERPASSWORD) | docker login --username $(DOCKERUSERNAME) --password-stdin
+      cd ${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }}/
+      docker buildx build --platform ${{ parameters.platforms }} -t ${{ parameters.repository }}:${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }} --push . -f Dockerfile
+    displayName: 'Build!'
 
-- script: |
-    docker run --rm --privileged multiarch/qemu-user-static --reset -p yes i
-    docker buildx create --name firefly_iii_builder
-    docker buildx inspect firefly_iii_builder --bootstrap
-    docker buildx use firefly_iii_builder
-  displayName: 'Set up builder'
-
-- script: |
-    cd BaseImage
-    echo "Docker username = '$(DOCKERUSERNAME)'."
-    echo $(DOCKERPASSWORD) | docker login --username $(DOCKERUSERNAME) --password-stdin
-    cd ${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }}/
-    docker buildx build --platform ${{ parameters.platforms }} -t ${{ parameters.repository }}:${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }} --push . -f Dockerfile
-  displayName: 'Build!'
-
-- checkout: self
-  clean: true
+  - checkout: self
+    clean: true
