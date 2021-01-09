@@ -19,6 +19,7 @@ steps:
   displayName: 'Do Git config'
 
 - script: |
+    ls
     php build/generate-docker-files.php
   displayName: 'Run script to generate docker files.'
 
