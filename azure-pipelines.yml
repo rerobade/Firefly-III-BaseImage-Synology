@@ -19,6 +19,8 @@ steps:
   displayName: 'Do Git config'
 
 - script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+    php build/generate-docker-files.php
+  displayName: 'Run script to generate docker files.'
+
+- checkout: self
+  clean: true

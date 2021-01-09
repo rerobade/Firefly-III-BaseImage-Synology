@@ -1,0 +1,9 @@
+# added from inject-start.txt
+
+ENV FIREFLY_III_PATH=/var/www/html COMPOSER_ALLOW_SUPERUSER=1 DEBIAN_FRONTEND=noninteractive
+LABEL build_version="4.0" maintainer="thegrumpydictator@gmail.com"
+COPY conf/cacert.pem            /etc/ssl/certs/cacert.pem
+
+# RUN addgroup --system --gid 10001 nonroot && adduser --system --home /home/nonroot --uid 10000 --gid 10001 nonroot
+
+# end of inject-start.txt
