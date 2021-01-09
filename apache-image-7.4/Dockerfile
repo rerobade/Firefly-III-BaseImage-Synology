@@ -296,11 +296,11 @@ EXPOSE 8080
 
 VOLUME $FIREFLY_III_PATH/storage/upload
 
-COPY conf/locale.gen                  /etc/locale.gen
-COPY apache/apache2-ports.conf        /etc/apache2/ports.conf
-COPY apache/apache2-site.conf         /etc/apache2/sites-available/000-default.conf
-COPY scripts/wait-for-it.sh           /usr/local/bin/wait-for-it.sh
-COPY scripts/finalize-image.sh        /usr/local/bin/finalize-image.sh
+COPY conf/locale.gen                     /etc/locale.gen
+COPY apache/apache2-ports.conf           /etc/apache2/ports.conf
+COPY apache/apache2-site.conf            /etc/apache2/sites-available/000-default.conf
+COPY ../scripts/wait-for-it.sh           /usr/local/bin/wait-for-it.sh
+COPY ../scripts/finalize-image.sh        /usr/local/bin/finalize-image.sh
 
 # Script to run common extensions
 ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
