@@ -48,6 +48,7 @@ jobs:
   - script: |
       cd BaseImage
       git checkout main
+      git pull
       git status
       git add ${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }}/
       git commit -m "Auto-update build files."
