@@ -48,8 +48,6 @@ RUN set -eux; \
 		locales \
 		unzip \
 		xz-utils \
-		nano \
-		git \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
