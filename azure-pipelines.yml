@@ -22,7 +22,7 @@ parameters:
 - name: repository
   displayName: Repository name
   type: string
-  default: jc5x/test-repository
+  default: fireflyiii/base
 
 
 jobs:
