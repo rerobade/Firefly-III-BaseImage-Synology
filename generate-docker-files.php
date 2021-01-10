@@ -88,7 +88,7 @@ if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) {
 
     $filename = sprintf('%s/Dockerfile', BUILD_DIR);
     $content  = file_get_contents($filename);
-    $packages         = ['locales', 'unzip', 'xz-utils', 'nano', 'git'];
+    $packages         = ['locales', 'unzip', 'xz-utils']; // , 'nano', 'git'
     $packages         = array_map(function (string $string) {
         return sprintf("\t\t%s \\\n", $string);
 
