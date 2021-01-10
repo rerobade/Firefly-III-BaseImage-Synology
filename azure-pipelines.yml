@@ -75,6 +75,9 @@ jobs:
     displayName: 'Verify Docker installation.'
 
   - script: |
+      echo "Docker username = '$(DOCKERUSERNAME)'."
+      whoami
+      echo "I am $(whoami)"
       docker run --rm --privileged multiarch/qemu-user-static --reset -p yes i
       docker buildx create --name firefly_iii_builder
       docker buildx inspect firefly_iii_builder --bootstrap
