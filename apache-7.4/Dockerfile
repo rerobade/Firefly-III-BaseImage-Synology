@@ -305,6 +305,8 @@ ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/mas
 
 RUN set -eux; \
     /usr/sbin/locale-gen && \
+    chmod uga+x /usr/local/bin/finalize-image.sh && \
+    chmod uga+x /usr/local/bin/wait-for-it.sh && \
     chmod uga+x /usr/local/bin/install-php-extensions && sync && \
     install-php-extensions intl bcmath ldap gd pdo_pgsql pdo_mysql opcache memcached && \
     a2enmod rewrite && \
