@@ -180,7 +180,15 @@ if('fpm' === IMG_BUILD) {
     copy(sprintf('%s/conf/%s', __DIR__, 'locale.gen'), sprintf('%s/%s', $dirName, 'locale.gen'));
 }
 
-
+if('fpm' === IMG_BUILD) {
+    debugMessage('Remove CMD.');
+    $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
+    $content     = file_get_contents($filename);
+    $content     = str_replace("CMD [\"php-fpm\"]\n", '', $content);
+    file_put_contents($filename, $content);
+    debugMessage('Removed start cmd.');
+    unset($content);
+}
 
 debugMessage(sprintf('Done building %s/%s', IMG_BUILD, PHP_TO_USE));
 
