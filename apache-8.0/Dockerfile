@@ -309,7 +309,7 @@ RUN set -eux; \
     chmod uga+x /usr/local/bin/wait-for-it.sh && \
     chmod uga+x /usr/local/bin/install-php-extensions && sync && \
     install-php-extensions intl bcmath ldap gd pdo_pgsql pdo_mysql opcache memcached && \
-    a2enmod rewrite && \
+    a2enmod rewrite env headers && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
