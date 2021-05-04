@@ -17,8 +17,7 @@ Basically, I use the 7.4 Apache image with some minor changes.
 
 - [Firefly III on GitHub](https://github.com/firefly-iii/firefly-iii)
 - [The documentation for Firefly III](https://docs.firefly-iii.org/)
-* [jc5x/firefly-iii-base-image:latest](https://hub.docker.com/repository/docker/jc5x/firefly-iii-base-image)
-* [fireflyiii/tools-base-image:latest](https://hub.docker.com/repository/docker/fireflyiii/tools-base-image)
+* [fireflyiii/base:latest](https://hub.docker.com/repository/docker/fireflyiii/base)
 
 ## Issues and questions
 
