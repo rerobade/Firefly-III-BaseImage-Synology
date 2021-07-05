@@ -10,7 +10,7 @@ parameters:
 - name: buildPhpVersion
   displayName: Build PHP version
   type: string
-  default: 7.4
+  default: 8.0
 - name: buildImageType
   displayName: Build image type
   type: string
