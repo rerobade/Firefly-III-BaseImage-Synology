@@ -118,9 +118,6 @@ RUN { \
 	} | tee "$APACHE_CONFDIR/conf-available/docker-php.conf" \
 	&& a2enconf docker-php
 
-ENV PHP_EXTRA_BUILD_DEPS apache2-dev
-ENV PHP_EXTRA_CONFIGURE_ARGS --with-apxs2 --disable-cgi
-
 # Apply stack smash protection to functions using local buffers and alloca()
 # Make PHP's main executable position-independent (improves ASLR security mechanism, and has no performance impact on x86_64)
 # Enable optimization (-O2)
@@ -133,9 +130,9 @@ ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
 ENV GPG_KEYS 1729F83938DA44E27BA0F4D3DBDB397470D12172 BFDDD28642824F8118EF77909B67A5C12229118F
 
-ENV PHP_VERSION 8.0.10
-ENV PHP_URL="https://www.php.net/distributions/php-8.0.10.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-8.0.10.tar.xz.asc"
-ENV PHP_SHA256="66dc4d1bc86d9c1bc255b51b79d337ed1a7a035cf71230daabbf9a4ca35795eb"
+ENV PHP_VERSION 8.0.11
+ENV PHP_URL="https://www.php.net/distributions/php-8.0.11.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-8.0.11.tar.xz.asc"
+ENV PHP_SHA256="e3e5f764ae57b31eb65244a45512f0b22d7bef05f2052b23989c053901552e16"
 
 RUN set -eux; \
 	\
@@ -175,7 +172,7 @@ RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
-		${PHP_EXTRA_BUILD_DEPS:-} \
+		apache2-dev \
 		libargon2-dev \
 		libcurl4-openssl-dev \
 		libonig-dev \
@@ -241,12 +238,21 @@ RUN set -eux; \
 		$(test "$gnuArch" = 's390x-linux-gnu' && echo '--without-pcre-jit') \
 		--with-libdir="lib/$debMultiarch" \
 		\
-		${PHP_EXTRA_CONFIGURE_ARGS:-} \
+		--disable-cgi \
+		\
+		--with-apxs2 \
 	; \
 	make -j "$(nproc)"; \
 	find -type f -name '*.a' -delete; \
 	make install; \
-	find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; \
+	find \
+		/usr/local \
+		-type f \
+		-perm '/0111' \
+		-exec sh -euxc ' \
+			strip --strip-all "$@" || : \
+		' -- '{}' + \
+	; \
 	make clean; \
 	\
 # https://github.com/docker-library/php/issues/692 (copy default example "php.ini" files somewhere easily discoverable)
