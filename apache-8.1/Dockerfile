@@ -311,14 +311,18 @@ COPY ../scripts/wait-for-it.sh              /usr/local/bin/wait-for-it.sh
 COPY ../scripts/finalize-image.sh           /usr/local/bin/finalize-image.sh
 
 # Script to run common extensions
-ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 RUN set -eux; \
     /usr/sbin/locale-gen && \
     chmod uga+x /usr/local/bin/finalize-image.sh && \
     chmod uga+x /usr/local/bin/wait-for-it.sh && \
-    chmod uga+x /usr/local/bin/install-php-extensions && sync && \
-    install-php-extensions intl bcmath ldap gd pdo_pgsql pdo_mysql opcache memcached && \
+    chmod uga+x /usr/local/bin/install-php-extensions && sync
+
+RUN set -eux; \
+    install-php-extensions intl bcmath ldap gd pdo_pgsql pdo_mysql opcache memcached;
+
+RUN set -eux; \
     a2enmod rewrite env headers && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
