@@ -320,7 +320,7 @@ RUN set -eux; \
     chmod uga+x /usr/local/bin/install-php-extensions && sync
 
 RUN set -eux; \
-    install-php-extensions intl bcmath ldap gd pdo_pgsql pdo_mysql opcache memcached;
+    install-php-extensions intl bcmath gd pdo_pgsql pdo_mysql opcache memcached;
 
 RUN set -eux; \
     a2enmod rewrite env headers && \
