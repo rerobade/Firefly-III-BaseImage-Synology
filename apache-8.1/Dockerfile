@@ -319,8 +319,12 @@ RUN set -eux; \
     chmod uga+x /usr/local/bin/wait-for-it.sh && \
     chmod uga+x /usr/local/bin/install-php-extensions && sync
 
-RUN set -eux; \
-    install-php-extensions intl bcmath gd pdo_pgsql pdo_mysql opcache memcached;
+RUN set -eux;install-php-extensions intl
+RUN set -eux;install-php-extensions bcmath 
+RUN set -eux;install-php-extensions pdo_pgsql 
+RUN set -eux;install-php-extensions pdo_mysql 
+RUN set -eux;install-php-extensions opcache 
+RUN set -eux;install-php-extensions memcached
 
 RUN set -eux; \
     a2enmod rewrite env headers && \
