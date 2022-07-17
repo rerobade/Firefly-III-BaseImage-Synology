@@ -9,7 +9,7 @@ COPY ../scripts/wait-for-it.sh              /usr/local/bin/wait-for-it.sh
 COPY ../scripts/finalize-image.sh           /usr/local/bin/finalize-image.sh
 
 # Script to run common extensions
-ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
 RUN set -eux; \
     /usr/sbin/locale-gen && \
