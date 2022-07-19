@@ -5,7 +5,7 @@ LABEL build_version="4.1" maintainer="james@firefly-iii.org"
 COPY ../conf/cacert.pem            /etc/ssl/certs/cacert.pem
 
 HEALTHCHECK --interval=5m --timeout=3s \
-  CMD curl -f http://localhost/ || exit 1
+  CMD curl -f http://localhost:8080/ || exit 1
 
 # RUN addgroup --system --gid 10001 nonroot && adduser --system --home /home/nonroot --uid 10000 --gid 10001 nonroot
 
