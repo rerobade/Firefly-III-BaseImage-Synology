@@ -29,7 +29,7 @@ RUN set -eux; \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
-    sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini && \
+    sed -i 's/memory_limit = 128M/memory_limit = 1G/' /usr/local/etc/php/php.ini && \
     sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 64M/' /usr/local/etc/php/php.ini && \
     sed -i 's/expose_php = On/expose_php = Off/' /usr/local/etc/php/php.ini && \
     sed -i 's/post_max_size = 8M/post_max_size = 64M/' /usr/local/etc/php/php.ini && \
