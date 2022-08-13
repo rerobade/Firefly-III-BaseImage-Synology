@@ -35,9 +35,9 @@ jobs:
   - checkout: self
     persistCredentials: true
 
-  - displayName: 'Prune builder.'
-    script: |
+  - script: |
       docker buildx prune
+    displayName: 'Prune builder.'
 
   - script: |
       cd BaseImage
