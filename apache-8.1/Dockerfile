@@ -8,10 +8,10 @@ FROM debian:buster-slim
 # added from inject-start.txt
 
 ENV FIREFLY_III_PATH=/var/www/html COMPOSER_ALLOW_SUPERUSER=1 DEBIAN_FRONTEND=noninteractive
-LABEL build_version="4.1" maintainer="james@firefly-iii.org"
+LABEL build_version="4.2" maintainer="james@firefly-iii.org"
 COPY ../conf/cacert.pem            /etc/ssl/certs/cacert.pem
 
-HEALTHCHECK --interval=5m --timeout=3s \
+HEALTHCHECK --interval=1m --timeout=3s --start-period=45s \
   CMD curl -f http://localhost:8080/robots.txt || exit 1
 
 # RUN addgroup --system --gid 10001 nonroot && adduser --system --home /home/nonroot --uid 10000 --gid 10001 nonroot
@@ -133,9 +133,9 @@ ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
 ENV GPG_KEYS 528995BFEDFBA7191D46839EF9BA0ADA31CBD89E 39B641343D8C104B2B146DC3F9C39DC0B9698544 F1F692238FBC1666E5A5CCD4199F9DFEF6FFBAFD
 
-ENV PHP_VERSION 8.1.8
-ENV PHP_URL="https://www.php.net/distributions/php-8.1.8.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-8.1.8.tar.xz.asc"
-ENV PHP_SHA256="04c065515bc347bc68e0bb1ac7182669a98a731e4a17727e5731650ad3d8de4c"
+ENV PHP_VERSION 8.1.9
+ENV PHP_URL="https://www.php.net/distributions/php-8.1.9.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-8.1.9.tar.xz.asc"
+ENV PHP_SHA256="53477e73e6254dc942b68913a58d815ffdbf6946baf61a1f8ef854de524c27bf"
 
 RUN set -eux; \
 	\
@@ -334,7 +334,7 @@ RUN set -eux; \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
     sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
-    sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini && \
+    sed -i 's/memory_limit = 128M/memory_limit = 1G/' /usr/local/etc/php/php.ini && \
     sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 64M/' /usr/local/etc/php/php.ini && \
     sed -i 's/expose_php = On/expose_php = Off/' /usr/local/etc/php/php.ini && \
     sed -i 's/post_max_size = 8M/post_max_size = 64M/' /usr/local/etc/php/php.ini && \
