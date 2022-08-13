@@ -15,7 +15,7 @@ RUN set -eux; \
     /usr/sbin/locale-gen && \
     chmod uga+x /usr/local/bin/finalize-image.sh && \
     chmod uga+x /usr/local/bin/wait-for-it.sh && \
-    chmod x /usr/local/bin/install-php-extensions && sync
+    chmod uga+x /usr/local/bin/install-php-extensions
 
 RUN set -eux;install-php-extensions intl
 RUN set -eux;install-php-extensions bcmath 

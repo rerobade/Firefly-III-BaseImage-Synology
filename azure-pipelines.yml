@@ -37,7 +37,9 @@ jobs:
 
   - script: |
       docker buildx prune --force
-    displayName: 'Prune builder.'
+      docker container stop $(docker container ls -a -f name=builder --format="{{.ID}}")
+      docker container rm $(docker container ls -a -f name=builder --format="{{.ID}}")
+    displayName: 'Prune and remove old builder.'
 
   - script: |
       cd BaseImage
