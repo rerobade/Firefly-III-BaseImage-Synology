@@ -18,7 +18,7 @@ parameters:
 - name: platforms
   displayName: Build platforms
   type: string
-  default: linux/amd64,linux/arm64,linux/arm/v7,linux/arm/v6,linux/386
+  default: linux/amd64,linux/arm64,linux/arm/v7,linux/386
 - name: repository
   displayName: Repository name
   type: string
