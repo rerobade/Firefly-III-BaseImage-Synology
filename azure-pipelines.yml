@@ -36,7 +36,7 @@ jobs:
     persistCredentials: true
 
   - script: |
-      docker buildx prune
+      docker buildx prune --force
     displayName: 'Prune builder.'
 
   - script: |
