@@ -291,3 +291,43 @@ WORKDIR /var/www/html
 
 EXPOSE 8080
 
+# start of inject-custom.txt
+
+VOLUME $FIREFLY_III_PATH/storage/upload
+
+COPY ../conf/locale.gen                     /etc/locale.gen
+COPY ../apache/apache2-ports.conf           /etc/apache2/ports.conf
+COPY ../apache/apache2-site.conf            /etc/apache2/sites-available/000-default.conf
+COPY ../scripts/wait-for-it.sh              /usr/local/bin/wait-for-it.sh
+COPY ../scripts/finalize-image.sh           /usr/local/bin/finalize-image.sh
+
+# Script to run common extensions
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
+RUN set -eux; \
+    /usr/sbin/locale-gen && \
+    chmod uga+x /usr/local/bin/finalize-image.sh && \
+    chmod uga+x /usr/local/bin/wait-for-it.sh && \
+    chmod uga+x /usr/local/bin/install-php-extensions
+
+RUN set -eux;install-php-extensions intl
+RUN set -eux;install-php-extensions bcmath 
+RUN set -eux;install-php-extensions pdo_pgsql 
+RUN set -eux;install-php-extensions pdo_mysql 
+RUN set -eux;install-php-extensions opcache 
+RUN set -eux;install-php-extensions memcached
+
+RUN set -eux; \
+    a2enmod rewrite env headers && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
+    sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
+    sed -i 's/memory_limit = 128M/memory_limit = 1G/' /usr/local/etc/php/php.ini && \
+    sed -i 's/upload_max_filesize = 2M/upload_max_filesize = 64M/' /usr/local/etc/php/php.ini && \
+    sed -i 's/expose_php = On/expose_php = Off/' /usr/local/etc/php/php.ini && \
+    sed -i 's/post_max_size = 8M/post_max_size = 64M/' /usr/local/etc/php/php.ini && \
+    echo 'ServerTokens Prod' >> /etc/apache2/apache2.conf && \
+    echo 'ServerSignature Off' >> /etc/apache2/apache2.conf
+
+#USER nonroot
+# end of inject-custom.txt
