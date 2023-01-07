@@ -132,7 +132,7 @@ if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) {
     unset($content);
 }
 
-if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD && '8.2' !== PHP_TO_USE) {
+if(('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) && '8.2' !== PHP_TO_USE) {
     debugMessage('Step: inject extra code at the start of the Docker file (!8.2 specific)');
 
     $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
@@ -144,7 +144,7 @@ if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD && '8.2' !== PHP_TO_USE) {
     unset($content);
 }
 
-if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD && '8.2' === PHP_TO_USE) {
+if(('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) && '8.2' === PHP_TO_USE) {
     debugMessage('Step: inject extra code at the start of the Docker file (8.2 specific)');
 
     $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
