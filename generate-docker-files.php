@@ -40,6 +40,29 @@ $files = [
     ],
 ];
 
+// since this affects the base image, only overrule the Debian version when the user requests PHP 8.2.
+if(PHP_TO_USE === '8.2') {
+    $files = [
+    'apache' => [
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/apache/Dockerfile', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/apache/docker-php-entrypoint', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/apache/apache2-foreground', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/apache/docker-php-ext-configure', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/apache/docker-php-ext-enable', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/apache/docker-php-ext-install', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/apache/docker-php-source', PHP_TO_USE),
+    ],
+    'fpm' => [
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/fpm/Dockerfile', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/fpm/docker-php-entrypoint', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/fpm/docker-php-ext-configure', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/fpm/docker-php-ext-enable', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/fpm/docker-php-ext-install', PHP_TO_USE),
+    sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/fpm/docker-php-source', PHP_TO_USE),
+    ],
+];
+}
+
 if(! array_key_exists(IMG_BUILD, $files)) {
     debugMessage(sprintf('Image %s cannot be build (yet).', IMG_BUILD));
     exit(1);
