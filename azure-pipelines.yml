@@ -67,7 +67,7 @@ jobs:
       cd BaseImage
       echo $(DOCKERPASSWORD) | docker login --username $(DOCKERUSERNAME) --password-stdin
       cd ${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }}/
-      docker buildx build --platform ${{ parameters.platforms }} -t ${{ parameters.repository }}:${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }} --push . -f Dockerfile
+      docker buildx build  --no-cache --progress=plain --platform ${{ parameters.platforms }} -t ${{ parameters.repository }}:${{ parameters.buildImageType }}-${{ parameters.buildPhpVersion }} --push . -f Dockerfile
     displayName: 'Build!'
 
   - checkout: self
