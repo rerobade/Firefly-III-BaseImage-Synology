@@ -132,13 +132,25 @@ if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) {
     unset($content);
 }
 
-if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) {
-    debugMessage('Step: inject extra code at the start of the Docker file');
+if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD && '8.2' !== PHP_TO_USE) {
+    debugMessage('Step: inject extra code at the start of the Docker file (!8.2 specific)');
 
     $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
     $content     = file_get_contents($filename);
     $injectStart = file_get_contents(sprintf('%s/%s-%s-config/inject-start.txt', __DIR__, IMG_BUILD, PHP_TO_USE));
     $content     = str_replace("FROM debian:buster-slim\n", sprintf("FROM debian:buster-slim\n%s", $injectStart), $content);
+    file_put_contents($filename, $content);
+    debugMessage('Added build arguments.');
+    unset($content);
+}
+
+if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD && '8.2' === PHP_TO_USE) {
+    debugMessage('Step: inject extra code at the start of the Docker file (8.2 specific)');
+
+    $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
+    $content     = file_get_contents($filename);
+    $injectStart = file_get_contents(sprintf('%s/%s-%s-config/inject-start.txt', __DIR__, IMG_BUILD, PHP_TO_USE));
+    $content     = str_replace("FROM debian:buster-slim\n", sprintf("FROM debian:bullseye-slim\n%s", $injectStart), $content);
     file_put_contents($filename, $content);
     debugMessage('Added build arguments.');
     unset($content);
