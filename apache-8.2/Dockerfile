@@ -12,7 +12,7 @@ LABEL build_version="4.3" maintainer="james@firefly-iii.org"
 COPY ../conf/cacert.pem            /etc/ssl/certs/cacert.pem
 
 HEALTHCHECK --interval=1m --timeout=3s --start-period=45s \
-  CMD curl -f http://localhost:8080/robots.txt || exit 1
+  CMD curl -H "User-Agent: Firefly III Health Checker/1.0" -f http://localhost:8080/robots.txt || exit 1
 
 # RUN addgroup --system --gid 10001 nonroot && adduser --system --home /home/nonroot --uid 10000 --gid 10001 nonroot
 
