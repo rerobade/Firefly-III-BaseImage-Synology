@@ -1,4 +1,4 @@
-# Offical Firefly III Docker base image
+# Copy of Offical Firefly III Docker base image to show how to make it compatible with my Synology NAS
 
 <!-- PROJECT LOGO -->
 <br />
