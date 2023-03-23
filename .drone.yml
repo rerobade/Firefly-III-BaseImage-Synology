@@ -1,0 +1,38 @@
+kind: pipeline
+name: Firefly-III-BaseImage-Synology
+type: docker
+
+trigger:
+  event:
+    - custom
+
+steps:
+  - name: 'Run script to generate docker files.'
+    image: php:8.2-cli-buster
+    commands:
+      - php generate-docker-files.php apache 8.2 buster
+  - name: 'Copy all context files to .drone'
+    image: php:8.2-cli-buster
+    commands:
+      - rm -rf .drone
+      - mkdir .drone
+      - cp -R conf .drone/
+      - cp -R apache .drone/
+      - cp -R scripts .drone/
+      - cp -R apache-8.2-buster/* .drone/
+  - name: 'Build!'
+    image: plugins/docker
+    settings:
+      storage_driver: vfs # https://discourse.drone.io/t/plugins-docker-on-synology-dsm/8456/6
+      #dry_run: true
+      registry: <your registry>
+      username:
+        from_secret: docker_registry_user
+      password:
+        from_secret: docker_registry_password
+      repo: <your registry>/fireflyiii/base
+      context: .drone/
+      dockerfile: .drone/Dockerfile
+      platform: linux/x86_64
+      tags:
+        - apache-8.2-buster

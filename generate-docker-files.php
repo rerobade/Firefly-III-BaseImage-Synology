@@ -18,7 +18,8 @@ declare(strict_types=1);
 
 define('IMG_BUILD', $argv[1] ?? 'apache');
 define('PHP_TO_USE', $argv[2] ?? '7.4');
-define('BUILD_DIR', sprintf('%s/%s-%s', __DIR__, IMG_BUILD, PHP_TO_USE));
+define('IMG_BASE', $argv[3] ?? 'buster');
+define('BUILD_DIR', sprintf('%s/%s-%s-%s', __DIR__, IMG_BUILD, PHP_TO_USE, IMG_BASE));
 
 $files = [
     'apache' => [
@@ -41,7 +42,7 @@ $files = [
 ];
 
 // since this affects the base image, only overrule the Debian version when the user requests PHP 8.2.
-if(PHP_TO_USE === '8.2') {
+if(IMG_BASE === 'bullseye') {
     $files = [
     'apache' => [
     sprintf('https://raw.githubusercontent.com/docker-library/php/master/%s/bullseye/apache/Dockerfile', PHP_TO_USE),
@@ -68,7 +69,7 @@ if(! array_key_exists(IMG_BUILD, $files)) {
     exit(1);
 }
 
-debugMessage(sprintf('Going to build %s/%s', IMG_BUILD, PHP_TO_USE));
+debugMessage(sprintf('Going to build %s/%s/%s', IMG_BUILD, PHP_TO_USE, IMG_BASE));
 
 if(!file_exists(BUILD_DIR)) {
     mkdir(BUILD_DIR, 0777, true);
@@ -132,8 +133,8 @@ if('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) {
     unset($content);
 }
 
-if(('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) && '8.2' !== PHP_TO_USE) {
-    debugMessage('Step: inject extra code at the start of the Docker file (!8.2 specific)');
+if(('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) && 'buster' === IMG_BASE) {
+    debugMessage('Step: inject extra code at the start of the Docker file (buster specific)');
 
     $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
     $content     = file_get_contents($filename);
@@ -144,8 +145,8 @@ if(('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) && '8.2' !== PHP_TO_USE) {
     unset($content);
 }
 
-if(('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) && '8.2' === PHP_TO_USE) {
-    debugMessage('Step: inject extra code at the start of the Docker file (8.2 specific)');
+if(('apache' === IMG_BUILD || 'fpm' === IMG_BUILD) && 'bullseye' === IMG_BASE) {
+    debugMessage('Step: inject extra code at the start of the Docker file (bullseye specific)');
 
     $filename    = sprintf('%s/Dockerfile', BUILD_DIR);
     $content     = file_get_contents($filename);
